@@ -1,0 +1,47 @@
+{
+  "name": "its-stock-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Application de gestion de stock pour ITS Sénégal",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
+    "@tanstack/react-query": "^5.80.7",
+    "@tanstack/react-query-devtools": "^5.80.7",
+    "clsx": "^2.1.1",
+    "date-fns": "^2.30.0",
+    "file-saver": "^2.0.5",
+    "firebase": "^11.9.1",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.294.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.58.1",
+    "react-hot-toast": "^2.5.2",
+    "react-router-dom": "^6.30.1",
+    "recharts": "^2.15.3",
+    "xlsx": "^0.18.5",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@vitejs/plugin-react": "^4.5.2",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.10.0",
+    "eslint": "^8.53.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "vite": "^4.5.14"
+  }
+}

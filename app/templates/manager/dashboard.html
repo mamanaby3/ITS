@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau de bord Manager - Gestion de Stock{% endblock %}
+
+{% block content %}
+<h1>Tableau de bord Manager</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ total_dispatches }}</div>
+        <div class="stat-label">Total Dispatches</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ pending_dispatches }}</div>
+        <div class="stat-label">En attente</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ in_progress_dispatches }}</div>
+        <div class="stat-label">En cours</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-value">{{ completed_dispatches }}</div>
+        <div class="stat-label">Terminés</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 class="card-header">Dispatches récents</h2>
+    <div style="margin-bottom: 1rem;">
+        <a href="{{ url_for('manager.new_dispatch') }}" class="btn btn-primary">Nouveau Dispatch</a>
+    </div>
+    
+    {% if recent_dispatches %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Client</th>
+                <th>Produit</th>
+                <th>Quantité (t)</th>
+                <th>Source → Destination</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dispatch in recent_dispatches %}
+            <tr>
+                <td>{{ dispatch.dispatch_number }}</td>
+                <td>{{ dispatch.client.name }}</td>
+                <td>{{ dispatch.product.name }}</td>
+                <td>{{ dispatch.total_quantity }}</td>
+                <td>{{ dispatch.source_warehouse.code }} → {{ dispatch.destination_warehouse.code }}</td>
+                <td>
+                    {% if dispatch.status == 'pending' %}
+                        <span class="badge badge-warning">En attente</span>
+                    {% elif dispatch.status == 'in_progress' %}
+                        <span class="badge badge-primary">En cours</span>
+                    {% elif dispatch.status == 'completed' %}
+                        <span class="badge badge-success">Terminé</span>
+                    {% else %}
+                        <span class="badge badge-danger">Annulé</span>
+                    {% endif %}
+                </td>
+                <td>{{ dispatch.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>
+                    <a href="{{ url_for('manager.dispatch_detail', dispatch_id=dispatch.id) }}" class="btn btn-sm btn-primary">Détails</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Aucun dispatch récent.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Frontend-API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Frontend ⟷ API Backend</h1>
+        
+        <div class="form-group">
+            <label>URL de l'API :</label>
+            <input type="text" id="apiUrl" value="http://localhost:5000/api">
+        </div>
+        
+        <div class="form-group">
+            <label>Email :</label>
+            <select id="email">
+                <option value="admin@its.sn">admin@its.sn</option>
+                <option value="manager@its.sn">manager@its.sn</option>
+                <option value="test@its.sn">test@its.sn</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Mot de passe :</label>
+            <input type="password" id="password" value="123456">
+        </div>
+        
+        <button onclick="testConnection()">🔗 Tester la connexion</button>
+        <button onclick="testHealth()">💓 Tester la santé</button>
+        <button onclick="testNavires()">🚢 Tester les navires</button>
+        <button onclick="clearResults()">🧹 Effacer</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let authToken = null;
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        async function testHealth() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            
+            try {
+                log('🔍 Test de santé du serveur...', 'info');
+                
+                const response = await fetch(`${apiUrl}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ Serveur OK: ${data.status} | DB: ${data.database}`, 'success');
+                } else {
+                    log(`❌ Erreur serveur: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`💥 Erreur de connexion: ${error.message}`, 'error');
+                log('   Vérifiez que le serveur backend est démarré sur localhost:5000', 'error');
+            }
+        }
+        
+        async function testConnection() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                log(`🔐 Test de connexion: ${email}`, 'info');
+                
+                const response = await fetch(`${apiUrl}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    authToken = data.token;
+                    log(`✅ Connexion réussie!`, 'success');
+                    log(`   Token: ${authToken.substring(0, 20)}...`, 'success');
+                    log(`   Utilisateur: ${data.user.prenom} ${data.user.nom} (${data.user.role})`, 'success');
+                } else {
+                    log(`❌ Échec de connexion: ${data.error || 'Erreur inconnue'}`, 'error');
+                    if (data.errors) {
+                        log(`   Détails: ${JSON.stringify(data.errors)}`, 'error');
+                    }
+                }
+            } catch (error) {
+                log(`💥 Erreur de connexion: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testNavires() {
+            if (!authToken) {
+                log('❌ Vous devez d\\'abord vous connecter!', 'error');
+                return;
+            }
+            
+            const apiUrl = document.getElementById('apiUrl').value;
+            
+            try {
+                log('🚢 Test de l\\'endpoint navires...', 'info');
+                
+                const response = await fetch(`${apiUrl}/navires`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    log(`✅ API navires OK: ${data.data.length} navires trouvés`, 'success');
+                    log('🎉 FRONTEND ⟷ API BACKEND FONCTIONNE!', 'success');
+                } else {
+                    log(`❌ Erreur API navires: ${data.error || 'Erreur inconnue'}`, 'error');
+                }
+            } catch (error) {
+                log(`💥 Erreur API navires: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test automatique au chargement
+        window.onload = function() {
+            log('🚀 Page de test chargée', 'info');
+            log('1. Cliquez sur "Tester la santé" pour vérifier le serveur', 'info');
+            log('2. Cliquez sur "Tester la connexion" pour vous authentifier', 'info');
+            log('3. Cliquez sur "Tester les navires" pour vérifier l\\'API complète', 'info');
+        };
+    </script>
+</body>
+</html>

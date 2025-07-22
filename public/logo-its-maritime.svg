@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Fond cercle -->
+  <circle cx="100" cy="100" r="95" fill="#1e40af" stroke="#2563eb" stroke-width="2"/>
+  
+  <!-- Vagues -->
+  <path d="M30 140 Q50 120 70 140 T110 140 T150 140 T190 140" stroke="#60a5fa" stroke-width="3" fill="none"/>
+  <path d="M20 150 Q40 130 60 150 T100 150 T140 150 T180 150" stroke="#3b82f6" stroke-width="3" fill="none"/>
+  
+  <!-- Ancre stylisée -->
+  <g transform="translate(100, 80)">
+    <path d="M0 -30 L0 20" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="0" cy="-35" r="8" fill="none" stroke="white" stroke-width="3"/>
+    <path d="M-15 -20 L15 -20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-20 15 Q-20 25 -10 25 L-5 25 L-5 20 M20 15 Q20 25 10 25 L5 25 L5 20" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Texte ITS -->
+  <text x="100" y="165" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">ITS</text>
+  <text x="100" y="185" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#93bbfc">SÉNÉGAL</text>
+</svg>

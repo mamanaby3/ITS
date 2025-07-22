@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestion de Stock{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">Gestion de Stock - Manutention Céréalière</a>
+            {% if current_user.is_authenticated %}
+            <div style="float: right; color: white;">
+                {{ current_user.username }} ({{ current_user.role }})
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: white; margin-left: 10px;">Déconnexion</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+    
+    {% if current_user.is_authenticated %}
+    <div class="layout">
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                {% if current_user.role == 'manager' %}
+                <li><a href="{{ url_for('manager.dashboard') }}">Tableau de bord</a></li>
+                <li><a href="{{ url_for('manager.new_dispatch') }}">Nouveau Dispatch</a></li>
+                <li><a href="{{ url_for('manager.list_dispatches') }}">Mes Dispatches</a></li>
+                {% endif %}
+                
+                {% if current_user.role == 'operator' %}
+                <li><a href="{{ url_for('operator.dashboard') }}">Tableau de bord</a></li>
+                <li><a href="{{ url_for('operator.pending_rotations') }}">Rotations en attente</a></li>
+                <li><a href="{{ url_for('operator.direct_entry') }}">Entrée directe</a></li>
+                <li><a href="{{ url_for('operator.movements') }}">Mes mouvements</a></li>
+                {% endif %}
+                
+                {% if current_user.role == 'admin' %}
+                <li><a href="{{ url_for('admin.dashboard') }}">Tableau de bord</a></li>
+                <li><a href="{{ url_for('admin.users') }}">Utilisateurs</a></li>
+                <li><a href="{{ url_for('admin.clients') }}">Clients</a></li>
+                <li><a href="{{ url_for('admin.products') }}">Produits</a></li>
+                <li><a href="{{ url_for('admin.warehouses') }}">Magasins</a></li>
+                <li><a href="{{ url_for('admin.chauffeurs') }}">Chauffeurs</a></li>
+                {% endif %}
+                
+                <li><a href="{{ url_for('reports.dashboard') }}">Rapports</a></li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+    <div class="container" style="margin-top: 2rem;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    {% endif %}
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
