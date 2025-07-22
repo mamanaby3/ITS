@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Système de Gestion de Stock - Manutention Céréalière
 
 Application web pour la gestion de stock et le suivi des rotations de camions dans le cadre de la manutention de produits céréaliers au port de Dakar.
@@ -137,3 +138,6 @@ GESTION_STOCK_ITS_SN/
 ## Support
 
 Pour toute question ou problème technique, veuillez contacter l'équipe de développement.
+=======
+# ITS
+>>>>>>> 490582cde13e48bc38dc2c9de704b9c5b8fe88d6
