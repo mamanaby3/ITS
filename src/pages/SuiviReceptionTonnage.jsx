@@ -30,13 +30,15 @@ const SuiviReceptionTonnage = () => {
   const loadReceptions = async () => {
     setLoading(true);
     try {
+      console.log('Loading data for date:', selectedDate);
+      console.log('Params object:', { date: selectedDate });
       // Utiliser la nouvelle API qui récupère les navires avec leur dispatching
-      const response = await api.get('/navires/suivi-tonnage', { 
-        params: { date: selectedDate }
-      });
+      const response = await api.get(`/api/navires/suivi-tonnage?date=${selectedDate}`);
       
-      // La réponse contient { success: true, data: [...], date: '...' }
-      const naviresData = response?.data || [];
+      // La réponse est déjà l'objet de données (pas response.data)
+      console.log('Response complète:', response);
+      const naviresData = response?.data || response || [];
+      console.log('Navires data:', naviresData);
       
       // S'assurer que les données sont dans le bon format
       if (!Array.isArray(naviresData)) {
